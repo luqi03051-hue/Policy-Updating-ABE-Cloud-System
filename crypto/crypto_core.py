@@ -35,7 +35,6 @@ from typing import Dict, Any
 
 def _extract_oid(output: str) -> str:
     s = (output or "").strip()
-    # 尝试截取 JSON
     l = s.find("{")
     r = s.rfind("}")
     if l != -1 and r != -1 and r > l:
@@ -64,10 +63,8 @@ def encrypt_bytes(plaintext: bytes, policy: str, keys_dir: str = "keys") -> Dict
     store_dir = os.path.join(keys_dir, "store")
     os.makedirs(store_dir, exist_ok=True)
 
-    # ✅ 核心：encrypt 前后差分，定位本次生成的新文件
     before = set(os.listdir(store_dir))
 
-    # 你项目里原来怎么调用 lambda_encrypt.py，就保持一致
     cmd = [
         sys.executable, "lambda_encrypt.py",
         "--setup", setup_path,
@@ -85,7 +82,6 @@ def encrypt_bytes(plaintext: bytes, policy: str, keys_dir: str = "keys") -> Dict
 
     store_file = None
     if new_files:
-        # 如果一次产生多个文件，取最后一个（通常最新）
         store_file = os.path.join(store_dir, new_files[-1])
 
     return {
@@ -94,7 +90,7 @@ def encrypt_bytes(plaintext: bytes, policy: str, keys_dir: str = "keys") -> Dict
         "keys_dir": keys_dir,
         "setup_path": setup_path,
         "store_dir": store_dir,
-        "store_file": store_file,   # ✅ 这里必须非 None 才能过 tamper test
+        "store_file": store_file,   
         "encrypt_stdout": out,
     }
 
@@ -103,11 +99,6 @@ def decrypt_bytes(
     attrs: str,
     sk_path: str,
 ) -> bytes:
-    """
-    使用你现有的 client_decrypt.py 做一次解密。
-    attrs: "attA,attB,attC" 这种
-    sk_path: 私钥文件路径（例如 keys/user_sk.json）
-    """
     object_id = bundle["object_id"]
     store_dir = bundle["store_dir"]
     setup_path = bundle["setup_path"]
@@ -130,20 +121,18 @@ def decrypt_bytes(
     ]
     out = _run(cmd)
 
-    # 只取最后一个非空行作为明文（前面可能有 [DEBUG] 或其他日志）
     lines = []
     for ln in out.splitlines():
         s = ln.strip()
         if not s:
             continue
-        # 过滤常见日志前缀
         if s.startswith("[DEBUG]") or s.startswith("[INFO]") or s.startswith("[WARN]") or s.startswith("[ERROR]"):
             continue
         lines.append(s)
 
-    # 如果没有任何“明文行”，说明明文就是空（或脚本只打了日志）
     if not lines:
         return b""
 
-    # 最后一行视为明文
+
     return lines[-1].encode("utf-8")
+
