@@ -191,4 +191,4 @@ if [[ "${RUN_TESTS:-0}" == "1" ]]; then
     -lc "python -m pip install -r requirements-dev.txt && python -m pytest -q -rs"
 fi
 
-say "✅ Demo completed. object_id = $OID"
+say "Demo completed. object_id = $OID"
