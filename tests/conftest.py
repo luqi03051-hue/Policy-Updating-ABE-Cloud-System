@@ -6,7 +6,7 @@ import json
 
 # tests/conftest.py
 
-ROOT = Path(__file__).resolve().parents[1]  # 项目根目录 E:\lambda_encrypt
+ROOT = Path(__file__).resolve().parents[1]  
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
@@ -59,6 +59,6 @@ def abe_materials(keys_dir, ta_setup, user_sk_A):
         "setup_path": ta_setup,
         "sk_path": user_sk_A,
         "mpk": setup_obj["mpk"],
-        # 删除 params
     }
+
 
