@@ -39,7 +39,6 @@ from charm.toolbox.pairinggroup import PairingGroup, ZR, G1, G2, GT, pair
 # ============================================================
 def normalize_policy(policy: str) -> str:
     p = (policy or "").strip()
-    # 单个属性：只含字母数字下划线/连字符（按你属性命名习惯调整）
     if re.fullmatch(r"[A-Za-z0-9_-]+", p):
         return f"({p} AND {p})"
     return policy
