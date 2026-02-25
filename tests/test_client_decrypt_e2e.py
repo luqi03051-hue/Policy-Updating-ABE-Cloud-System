@@ -37,7 +37,7 @@ def test_policy_not_satisfied_should_fail(keys_dir, ta_setup, user_sk_A):
     with pytest.raises(Exception):
         decrypt_bytes(
             bundle=bundle,
-            attrs="A",   # 缺 B
+            attrs="A",   
             sk_path=str(user_sk_A),
         )
 
@@ -49,7 +49,7 @@ def test_aad_object_id_tamper_should_fail(keys_dir, ta_setup, user_sk_A):
         keys_dir=str(keys_dir),
     )
 
-    # 篡改 object_id（AES-GCM AAD 是 object_id）
+  
     bundle["object_id"] = "fake_id"
 
     with pytest.raises(Exception):
@@ -74,3 +74,4 @@ def test_empty_plaintext(keys_dir, ta_setup, user_sk_A):
     )
 
     assert out == b""
+
