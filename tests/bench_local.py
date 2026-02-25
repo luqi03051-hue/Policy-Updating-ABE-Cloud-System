@@ -1,6 +1,6 @@
 import time
 import os
-from ade_abe import encrypt, decrypt   # 换成你真实的 import
+from ade_abe import encrypt, decrypt   
 
 def bench_file_size():
     print("=== File size vs Encrypt time ===")
@@ -31,7 +31,7 @@ def bench_policy_complexity():
         ct = encrypt(data, policy=policy)
         
         start = time.perf_counter()
-        pt = decrypt(ct, sk_valid)  # 你自己的有效 secret key
+        pt = decrypt(ct, sk_valid)  
         end = time.perf_counter()
         
         print(f"Policy: {policy}  | Decrypt time: {(end-start)*1000:.2f} ms")
@@ -40,3 +40,4 @@ def bench_policy_complexity():
 if __name__ == "__main__":
     bench_file_size()
     bench_policy_complexity()
+
